@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Machine Temperature Sensor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: lightgray;
+    }
+    #temp {
+      font-size: 60px;
+      font-weight: bold;
+    }
+    #status {
+      font-size: 30px;
+      padding: 10px;
+      margin: 10px auto;
+      width: 250px;
+      color: white;
+      background-color: green;
+    }
+    button {
+      font-size: 18px;
+      padding: 8px 14px;
+      margin: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Machine Temperature Sensor</h1>
+
+  <p>Temperature:</p>
+  <div id="temp">25 C</div>
+  <div id="status">NORMAL</div>
+
+  <h3>Threshold: <span id="threshold">80</span> C</h3>
+  <button onclick="changeThreshold(-5)">Threshold -5</button>
+  <button onclick="changeThreshold(5)">Threshold +5</button>
+
+  <h3>Machine</h3>
+  <button onclick="heatUp()">Heat Up</button>
+  <button onclick="coolDown()">Cool Down</button>
+  <button onclick="resetMachine()">Reset</button>
+
+  <script>
+    // variables
+    var temperature = 25;
+    var threshold = 80;
+    var heating = false;
+
+    // get the things from the page
+    var tempBox = document.getElementById("temp");
+    var statusBox = document.getElementById("status");
+    var thresholdBox = document.getElementById("threshold");
+
+    function changeThreshold(amount) {
+      threshold = threshold + amount;
+      thresholdBox.innerHTML = threshold;
+      checkTemperature();
+    }
+
+    function heatUp() {
+      heating = true;
+    }
+
+    function coolDown() {
+      heating = false;
+    }
+
+    function resetMachine() {
+      temperature = 25;
+      heating = false;
+      checkTemperature();
+    }
+
+    function checkTemperature() {
+      tempBox.innerHTML = temperature.toFixed(1) + " C";
+
+      if (temperature >= threshold) {
+        statusBox.innerHTML = "DANGER!";
+        statusBox.style.backgroundColor = "red";
+      } else if (temperature >= threshold - 10) {
+        statusBox.innerHTML = "WARNING";
+        statusBox.style.backgroundColor = "orange";
+      } else {
+        statusBox.innerHTML = "NORMAL";
+        statusBox.style.backgroundColor = "green";
+      }
+    }
+
+    // runs every 1 second
+    setInterval(function () {
+      if (heating == true) {
+        temperature = temperature + 2;
+      } else if (temperature > 25) {
+        temperature = temperature - 1;
+      }
+      checkTemperature();
+    }, 1000);
+
+    checkTemperature();
+  </script>
+
+</body>
+</html>
